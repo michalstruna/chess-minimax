@@ -38,7 +38,7 @@ class Pawn(Piece):
 
         move = (self.coord[0] + self.owner.direction, self.coord[1])
 
-        if self.board.is_valid_coord(move) and not self.board.fields[move]:
+        if self.board.is_valid_coord(move) and not self.board[move]:
             moves.append(move)
 
         move = (self.coord[0] + self.owner.direction * 2, self.coord[1])
@@ -48,12 +48,12 @@ class Pawn(Piece):
 
         move = (self.coord[0] + self.owner.direction, self.coord[1] - 1)
 
-        if self.board.is_valid_coord(move) and self.board.fields[move]:
+        if self.board.is_valid_coord(move) and self.board[move]:
             moves.append(move)
 
         move = (self.coord[0] + self.owner.direction, self.coord[1] + 1)
 
-        if self.board.is_valid_coord(move) and self.board.fields[move]:
+        if self.board.is_valid_coord(move) and self.board[move]:
             moves.append(move)
 
         return moves
@@ -82,7 +82,7 @@ class Queen(Piece):
                 if self.board.is_valid_coord(move):
                     moves.append(move)
 
-                    if self.board.fields[i, self.coord[1]]:
+                    if self.board[i, self.coord[1]]:
                         break
 
         for change in ((1, self.board.size), (-1, -1)):
@@ -92,7 +92,7 @@ class Queen(Piece):
                 if self.board.is_valid_coord(move):
                     moves.append(move)
 
-                    if self.board.fields[self.coord[0], i]:
+                    if self.board[self.coord[0], i]:
                         break
 
         return moves

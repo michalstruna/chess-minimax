@@ -8,6 +8,9 @@ class Board:
         self.size = size
         self.fields = np.zeros((size, size), dtype = Piece)
 
+    def __getitem__(self, key):
+        return self.fields[key]
+
     def add_piece(self, piece):
         self.fields[piece.coord] = piece
 

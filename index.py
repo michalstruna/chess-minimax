@@ -11,8 +11,7 @@ me = Player(Color.GREEN.value, 1)
 enemy = Player(Color.RED.value, -1)
 
 board = Board(8)
-board.add_piece(Queen(board, (0, 3), me))
-
+board.add_piece(Pawn(board, (1, 3), me))
 board.add_piece(Pawn(board, (6, 0), enemy))
 board.add_piece(Pawn(board, (6, 1), enemy))
 board.add_piece(Pawn(board, (6, 2), enemy))
@@ -30,7 +29,5 @@ while True:
     if not moves:
         break
 
-    move = moves[0]
-
-    me.pieces[0].move(move)
+    me.pieces[0].move(moves[-1])
     writer.write_board(board)
