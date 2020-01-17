@@ -1,6 +1,13 @@
 from colored import fg, bg, attr
+from argparse import ArgumentParser
 
 from Piece import Piece
+
+class Reader:
+
+    def read_args(self):
+        parser = ArgumentParser()
+        return parser.parse_args()
 
 class Writer:
 
