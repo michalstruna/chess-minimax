@@ -61,6 +61,9 @@ class Pawn(Piece):
         if self.board.is_valid_coord(move) and self.board[move]:
             moves.append(move)
 
+        # TODO: En passant.
+        # TODO: Transformation.
+
         return moves
 
     def _is_used(self):
