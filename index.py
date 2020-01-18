@@ -4,17 +4,17 @@ import time
 
 from Piece import Pawn, Queen
 from Board import Board
-from Player import Player, Color
+from Player import Player, Color, PlayerType
 from IOUtils import Reader, Writer
+from Game import Game, GameType
 
 reader = Reader()
 writer = Writer()
 
-
 args = reader.read_args()
 
-me = Player(Color.GREEN.value, 1)
-enemy = Player(Color.RED.value, -1)
+me = Player(Color.GREEN.value, 1, PlayerType.HUMAN)
+enemy = Player(Color.RED.value, -1, PlayerType.AI)
 
 board = Board(8)
 Pawn(board, (1, 3), enemy)
@@ -27,7 +27,19 @@ Pawn(board, (6, 5), enemy)
 Pawn(board, (6, 6), enemy)
 Pawn(board, (6, 7), enemy)
 
-while True:
+game = Game(board, [enemy, me])
+game.initialize(GameType.CLASSIC)
+
+game.play(
+    lambda player, move: writer.write_board(board),
+    lambda winner: print(winner)
+)
+
+
+
+
+
+while False:
     writer.write_board(board)
     (command, *args) = input("Zadej příkaz: ").split(sep = " ")
 
