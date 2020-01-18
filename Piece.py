@@ -1,5 +1,7 @@
 from enum import Enum
 from abc import ABC, abstractmethod
+import sys
+
 
 class Piece(ABC):
 
@@ -8,7 +10,8 @@ class Piece(ABC):
         self.coord = coord
         self.owner = owner
         self.owner.pieces.append(self)
-    
+        self.board.add_piece(self)
+
     @abstractmethod
     def get_moves(self):
         pass
@@ -17,6 +20,26 @@ class Piece(ABC):
     def __str__(self):
         pass
 
+    def generate_moves(self, change, max_count = sys.maxsize, can_attack = True):
+        pos = (self.coord[0], self.coord[1]) # TODO: Copy.
+        moves = []
+
+        for i in range(max_count):
+            pos = (pos[0] + change[0], pos[1] + change[1])
+
+            if not self.board.is_valid_coord(pos):
+                break
+
+            if self.board[pos]:
+                if can_attack and self.board[pos].owner != self.owner:
+                    moves.append(pos)
+
+                break
+            else:
+                moves.append(pos)
+
+        return moves
+
     def move(self, coord):
         if coord not in self.get_moves():
             raise ValueError("Invalid move.")
@@ -24,11 +47,13 @@ class Piece(ABC):
         current = self.board.fields[coord]
 
         if current:
-            current.owner.pieces.remove(current) # TODO: Castling is move to field with own field.
+            # TODO: Castling is move to field with own field.
+            current.owner.pieces.remove(current)
 
         self.board.fields[self.coord] = None
         self.board.fields[coord] = self
         self.coord = coord
+
 
 class Pawn(Piece):
 
@@ -72,6 +97,7 @@ class Pawn(Piece):
         else:
             return self.coord[0] != self.board.size - 2
 
+
 class Queen(Piece):
 
     def __init__(self, board, coord, owner):
@@ -83,24 +109,9 @@ class Queen(Piece):
     def get_moves(self):
         moves = []
 
-        for change in ((1, self.board.size), (-1, -1)):
-            for i in range(self.coord[0] + change[0], change[1], change[0]):
-                move = (i, self.coord[1])
-
-                if self.board.is_valid_coord(move):
-                    moves.append(move)
-
-                    if self.board[i, self.coord[1]]:
-                        break
-
-        for change in ((1, self.board.size), (-1, -1)):
-            for i in range(self.coord[1] + change[0], change[1], change[0]):
-                move = (self.coord[0], i)
-
-                if self.board.is_valid_coord(move):
-                    moves.append(move)
-
-                    if self.board[self.coord[0], i]:
-                        break
+        for i in (-1, 0, 1):
+            for j in (-1, 0, 1):
+                if i != 0 or j != 0:
+                    moves = moves + self.generate_moves((i, j))
 
         return moves
