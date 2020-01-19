@@ -9,6 +9,10 @@ class Reader:
         parser = ArgumentParser()
         return parser.parse_args()
 
+    def read_command(self):
+        command, *args = input("Zadej příkaz: ").split(sep = " ")
+        return command, args
+
 class Writer:
 
     def write_board(self, board):

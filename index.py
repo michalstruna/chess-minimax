@@ -25,11 +25,11 @@ game = Game(board, [enemy, me])
 game.initialize(GameType.CLASSIC)
 
 def get_human_move(player):
-    (command, *args) = input("Zadej příkaz: ").split(sep = " ") # TODO: Move to reader.
+    command, args = reader.read_command()
 
     try:
         if command == "move":
-            (y0, x0, y1, x1) = tuple(map(int, args))
+            (y0, x0, y1, x1) = map(int, args)
             start = (y0, x0)
             end = (y1, x1)
             return (start, end)
