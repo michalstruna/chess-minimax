@@ -56,9 +56,7 @@ class Game:
             player = self.players[self.move % 2]
             start, end = get_human_move(player) if player.type == PlayerType.HUMAN else player.brain.get_best_move()
 
-            if self.board[start] and self.board[start].owner == player:
-                self.board[start].move(end)
-
+            self.board[start].move(end)
             self.move += 1
             on_move(player, (start, end))
 
