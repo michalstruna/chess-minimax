@@ -3,10 +3,9 @@
 import time
 
 from Piece import Pawn, Queen
-from Board import Board
 from Player import Player, Color, PlayerType
 from IOUtils import Reader, Writer
-from Game import Game, GameType
+from Game import Game, GameType, Board
 from AI import Brain
 
 reader = Reader()

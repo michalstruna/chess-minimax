@@ -1,5 +1,5 @@
 from Player import Player, Color, PlayerType
-from Board import Board
+from Game import Board
 from Piece import Pawn, Queen
 import unittest
 import sys
