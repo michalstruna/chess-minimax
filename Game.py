@@ -48,6 +48,7 @@ class Game:
                     Pawn(self.board, self.board.convert((1, i), player), player)
 
                 Queen(self.board, self.board.convert((0, 3), player), player)
+                King(self.board, self.board.convert((0, 4), player), player)
 
 
     def play(self, get_human_move, on_move, on_end):
@@ -55,9 +56,7 @@ class Game:
             player = self.players[self.move % 2]
             start, end = get_human_move(player) if player.type == PlayerType.HUMAN else player.brain.get_best_move()
 
-            if self.board[start] and self.board[start].owner == player:
-                self.board[start].move(end)
-
+            self.board[start].move(end)
             self.move += 1
             on_move(player, (start, end))
 

@@ -20,8 +20,8 @@ class Piece(ABC):
     def __str__(self):
         pass
 
-    def generate_moves(self, change, max_count = sys.maxsize, can_attack = True):
-        pos = (self.coord[0], self.coord[1]) # TODO: Copy.
+    def generate_moves(self, change, max_count = sys.maxsize, can_attack = True, can_no_attack = True):
+        pos = (self.coord[0], self.coord[1])  # TODO: Copy.
         moves = []
 
         for i in range(max_count):
@@ -36,7 +36,10 @@ class Piece(ABC):
 
                 break
             else:
-                moves.append(pos)
+                if can_no_attack:
+                    moves.append(pos)
+                else:
+                    break
 
         return moves
 
@@ -61,34 +64,13 @@ class Piece(ABC):
 
 class Pawn(Piece):
 
-    def __init__(self, board, coord, owner):
-        super().__init__(board, coord, owner)
-
     def __str__(self):
         return "P"
 
     def get_moves(self):
-        moves = []
-
-        move = (self.coord[0] + self.owner.direction, self.coord[1])
-
-        if self.board.is_valid_coord(move) and not self.board[move]:
-            moves.append(move)
-
-        move = (self.coord[0] + self.owner.direction * 2, self.coord[1])
-
-        if self.board.is_valid_coord(move) and not self._is_used():
-            moves.append(move)
-
-        move = (self.coord[0] + self.owner.direction, self.coord[1] - 1)
-
-        if self.board.is_valid_coord(move) and self.board[move]:
-            moves.append(move)
-
-        move = (self.coord[0] + self.owner.direction, self.coord[1] + 1)
-
-        if self.board.is_valid_coord(move) and self.board[move]:
-            moves.append(move)
+        moves = self.generate_moves((self.owner.direction, 0), 1 if self._is_used() else 2, can_attack = False)
+        moves += self.generate_moves((self.owner.direction, 1), 1, can_no_attack = False)
+        moves += self.generate_moves((self.owner.direction, -1), 1, can_no_attack = False) 
 
         # TODO: En passant.
         # TODO: Transformation.
@@ -104,9 +86,6 @@ class Pawn(Piece):
 
 class Queen(Piece):
 
-    def __init__(self, board, coord, owner):
-        super().__init__(board, coord, owner)
-
     def __str__(self):
         return "Q"
 
@@ -117,5 +96,20 @@ class Queen(Piece):
             for j in (-1, 0, 1):
                 if i != 0 or j != 0:
                     moves = moves + self.generate_moves((i, j))
+
+        return moves
+
+class King(Piece):
+
+    def __str__(self):
+        return "K"
+
+    def get_moves(self):
+        moves = []
+
+        for i in (-1, 0, 1):
+            for j in (-1, 0, 1):
+                if i != 0 or j != 0:
+                    moves = moves + self.generate_moves((i, j), 1)
 
         return moves
