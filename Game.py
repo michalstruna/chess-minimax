@@ -48,6 +48,7 @@ class Game:
                     Pawn(self.board, self.board.convert((1, i), player), player)
 
                 Queen(self.board, self.board.convert((0, 3), player), player)
+                King(self.board, self.board.convert((0, 4), player), player)
 
 
     def play(self, get_human_move, on_move, on_end):
