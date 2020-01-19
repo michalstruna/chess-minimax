@@ -44,15 +44,19 @@ class Piece(ABC):
         if coord not in self.get_moves():
             raise ValueError("Invalid move.")
 
-        current = self.board.fields[coord]
+        current = self.board[coord]
 
         if current:
             # TODO: Castling is move to field with own field.
-            current.owner.pieces.remove(current)
+            current.remove()
 
-        self.board.fields[self.coord] = None
-        self.board.fields[coord] = self
+        self.board[self.coord] = None
+        self.board[coord] = self
         self.coord = coord
+
+    def remove(self):
+        self.board[self.coord] = None
+        self.owner.pieces.remove(self)
 
 
 class Pawn(Piece):
