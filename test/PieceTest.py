@@ -1,10 +1,11 @@
-from Player import Player, Color, PlayerType
-from Game import Board
-from Piece import Pawn, Queen
 import unittest
 import sys
 
 sys.path.append('..')
+
+from Player import Player, Color, PlayerType
+from Game import Board
+from Piece import Pawn, Queen
 
 
 def get_init():
