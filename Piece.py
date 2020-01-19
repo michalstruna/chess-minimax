@@ -98,3 +98,18 @@ class Queen(Piece):
                     moves = moves + self.generate_moves((i, j))
 
         return moves
+
+class King(Piece):
+
+    def __str__(self):
+        return "K"
+
+    def get_moves(self):
+        moves = []
+
+        for i in (-1, 0, 1):
+            for j in (-1, 0, 1):
+                if i != 0 or j != 0:
+                    moves = moves + self.generate_moves((i, j), 1)
+
+        return moves

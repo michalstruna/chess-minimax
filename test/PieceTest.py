@@ -5,7 +5,7 @@ sys.path.append('..')
 
 from Player import Player, Color, PlayerType
 from Game import Board
-from Piece import Pawn, Queen
+from Piece import *
 
 
 def get_init():
@@ -268,3 +268,81 @@ class QueenTest(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             queen.move((3, 3))
+
+
+class KingTest(unittest.TestCase):
+
+    def test_init_pos(self):
+        pos = (1, 1)
+        board, player, player2 = get_init()
+        king = King(board, pos, player)
+
+        self.assertEqual(king.coord, pos)
+
+    def test_corner_move(self):
+        board, player, player2 = get_init()
+        king = King(board, (0, 0), player)
+        moves = king.get_moves()
+
+        self.assertEqual(len(moves), 3)
+        self.assertIn((1, 0), moves)
+        self.assertIn((0, 1), moves)
+        self.assertIn((1, 1), moves)
+
+    def test_center_move(self):
+        board, player, player2 = get_init()
+        king = King(board, (3, 3), player)
+        moves = king.get_moves()
+
+        self.assertEqual(len(moves), 8)
+        self.assertIn((2, 3), moves)
+        self.assertIn((3, 2), moves)
+        self.assertIn((4, 3), moves)
+        self.assertIn((3, 4), moves)
+        self.assertIn((2, 2), moves)
+        self.assertIn((4, 4), moves)
+        self.assertIn((2, 4), moves)
+        self.assertIn((4, 2), moves)
+
+    def test_corner_barricade_move(self):
+        board, player, player2 = get_init()
+        king = King(board, (0, 0), player)
+        pawn = Pawn(board, (1, 1), player)
+        pawn2 = Pawn(board, (1, 0), player2)
+        moves = king.get_moves()
+
+        self.assertEqual(len(moves), 2)
+        self.assertIn((0, 1), moves)
+        self.assertIn((1, 0), moves)
+
+    def test_center_no_move(self):
+        board, player, player2 = get_init()
+        king = King(board, (3, 3), player)
+        queen2 = Queen(board, (2, 2), player)
+        queen3 = Queen(board, (4, 4), player)
+        queen4 = Queen(board, (3, 4), player)
+        queen5 = Queen(board, (4, 3), player)
+        queen6 = Queen(board, (2, 4), player)
+        queen7 = Queen(board, (4, 2), player)
+        queen8 = Queen(board, (2, 3), player)
+        queen9 = Queen(board, (3, 2), player)
+        moves = king.get_moves()
+
+        self.assertEqual(len(moves), 0)
+
+    def test_attack(self):
+        board, player, player2 = get_init()
+        king = King(board, (3, 3), player2)
+        king2 = King(board, (2, 2), player)
+        king.move(king2.coord)
+
+        self.assertEqual(king.coord, king2.coord)
+        self.assertNotIn(king2, player.pieces)
+        self.assertIn(king, player2.pieces)
+
+    def test_invalid_move(self):
+        board, player, player2 = get_init()
+        king = King(board, (1, 2), player)
+
+        with self.assertRaises(ValueError):
+            king.move((3, 2))
