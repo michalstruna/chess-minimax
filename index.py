@@ -7,52 +7,45 @@ from Board import Board
 from Player import Player, Color, PlayerType
 from IOUtils import Reader, Writer
 from Game import Game, GameType
+from AI import Brain
 
 reader = Reader()
 writer = Writer()
 
 args = reader.read_args()
 
+board = Board(8)
+
 me = Player(Color.GREEN.value, 1, PlayerType.HUMAN)
 enemy = Player(Color.RED.value, -1, PlayerType.AI)
 
-board = Board(8)
-Pawn(board, (1, 3), enemy)
-Pawn(board, (6, 0), enemy)
-Pawn(board, (6, 1), enemy)
-Pawn(board, (6, 2), enemy)
-Pawn(board, (6, 3), enemy)
-Pawn(board, (6, 4), enemy)
-Pawn(board, (6, 5), enemy)
-Pawn(board, (6, 6), enemy)
-Pawn(board, (6, 7), enemy)
+enemy.brain = Brain(enemy, me, board)
 
 game = Game(board, [enemy, me])
 game.initialize(GameType.CLASSIC)
 
-game.play(
-    lambda player, move: writer.write_board(board),
-    lambda winner: print(winner)
-)
+def get_human_move(player):
+    (command, *args) = input("Zadej příkaz: ").split(sep = " ") # TODO: Move to reader.
 
+    try:
+        if command == "move":
+            (y0, x0, y1, x1) = tuple(map(int, args))
+            start = (y0, x0)
+            end = (y1, x1)
+            return (start, end)
+        elif command == "show":
+            writer.write_board(board)
+            return get_human_move(player)
+        else:
+            raise ValueError("Invalid command.")
+    except:
+        print("Chyba, zadejde příkaz znovu.")
+        return get_human_move(player)
 
-
-
-
-while False:
+def on_move(player, move):
     writer.write_board(board)
-    (command, *args) = input("Zadej příkaz: ").split(sep = " ")
 
-    if command == "move":
-        (y0, x0, y1, x1) = tuple(map(int, args))
-        start = (y0, x0)
-        end = (y1, x1)
+def on_end(winner, move):
+    print(winner, move)
 
-        print(start)
-        print(end)
-
-        if board.is_valid_coord(start) and board.is_valid_coord(end) and board[start]:
-            board[start].move(end)
-
-    print("...AI je na tahu...")
-    time.sleep(2)
+game.play(get_human_move, on_move, on_end)

@@ -1,4 +1,4 @@
-from Player import Player, Color
+from Player import Player, Color, PlayerType
 from Board import Board
 from Piece import Pawn, Queen
 import unittest
@@ -9,8 +9,8 @@ sys.path.append('..')
 
 def get_init():
     board = Board(8)
-    player = Player(Color.GREEN, 1)
-    player2 = Player(Color.RED, -1)
+    player = Player(Color.GREEN, 1, PlayerType.HUMAN)
+    player2 = Player(Color.RED, -1, PlayerType.HUMAN)
     return board, player, player2
 
 

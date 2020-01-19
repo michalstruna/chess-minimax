@@ -27,4 +27,4 @@ class Board:
                     field.remove()
 
     def convert(self, coord, player):
-        return coord if player.direction < 0 else (-coord[0] - 1, coord[1])
+        return coord if player.direction > 0 else (self.size - coord[0] - 1, coord[1])

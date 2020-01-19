@@ -18,3 +18,4 @@ class Player:
         self.direction = direction
         self.pieces = []
         self.type = player_type
+        self.brain = None
